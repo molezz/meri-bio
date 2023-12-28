@@ -1,0 +1,194 @@
+﻿{include file=comm/head.html}
+
+{include file=comm/top.html}
+
+<div class="container pages">
+	{include file=comm/position.html}
+
+ 
+    <!-- 留言表单 -->
+    <div class="row">
+    	<div class="col-lg-3"></div>
+    	<div class="col-12 col-lg-6">
+        	<form class="my-4" onsubmit="return submsg(this);">
+                <div class="form-group">
+                    <label for="name">联系人（必填）</label>
+                    <div>
+                        <input type="text" name="name" required id="name" class="form-control" placeholder="姓名 ">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">联系方式（必填）</label>
+                    <div>
+                        <input type="text" name="contact" required id="contact" class="form-control" placeholder=" 手机或邮箱">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="project">项目类型</label>
+                    <div>
+                        <input type="text" name="project"  id="project" class="form-control" placeholder="（选填）遗传转化、基因敲除、碱基编辑、基因编辑载体构建等 ">
+                    </div>
+                </div>
+				
+				               <div class="form-group">
+                    <label for="requirement">项目要求</label>
+                    <div>
+                        <input type="text" name="requirement"  id="requirement" class="form-control" placeholder="（选填）双基因敲除，需要多少苗等 ">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="target">基因/靶点名称</label>
+                   
+                        <input type="text" name="target"  id="target" class="form-control" placeholder="（选填）该物种基因号或常用名称 ">
+
+                <div class="form-group">
+                    <label for="plasmid">载体名称</label>
+                        <div>
+                            <input type="text" name="plasmid"  id="plasmid" class="form-control" placeholder="（选填）载体名称 ">
+                        </div>
+                    </div>
+					
+					    <div class="form-group">
+                    <label for="seq">序列信息</label>
+                        <div>
+                            <input type="text" name="seq"  id="seq" class="form-control" placeholder="（选填）序列 ">
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        <label for="resis1">原核抗性</label>
+                            <div>
+                                <input type="text" name="resis1"  id="resis1" class="form-control" placeholder="（选填）原核抗性 ">
+                            </div>
+                        </div>
+
+
+                     <div class="form-group">
+                            <label for="resis2">真核抗性</label>
+                                <div>
+                                    <input type="text" name="resis2"  id="resis2" class="form-control" placeholder="（选填）真核抗性 ">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="request">阳性苗需求量</label>
+                                    <div>
+                                        <input type="text" name="request"  id="request" class="form-control" placeholder="（选填）阳性苗需求量 ">
+                                    </div>
+                                </div>
+
+
+                    <label for="species">物种/品系</label>
+                  
+                        <input type="text" name="species"  id="species" class="form-control" placeholder="（选填）水稻、拟南芥、番茄等 ">
+
+
+                    <label for="lab">课题组</label>
+                  
+                        <input type="text" name="lab"  id="lab" class="form-control" placeholder="（选填）课题组 ">
+
+                    
+                    <label for="org">单位</label>
+                  
+                        <input type="text" name="org"  id="org" class="form-control" placeholder="（选填）学校机构 ">
+                   
+                </div>
+                
+                <div class="form-group">
+                    <label for="other" >备注</label>
+                    <div>
+                        <textarea name="other" id="other" class="form-control" placeholder="（选填）其他说明 "></textarea>
+                    </div>
+                </div>
+                
+                {pboot:if({pboot:msgcodestatus})}
+                <div class="form-group">
+                    <label for="checkcode">验证码</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" name="checkcode" required id="checkcode" class="form-control" placeholder="请输入验证码">
+                        </div>
+                        <div class="col-6">
+                            <img title="点击刷新" style="height:33px;" src="{pboot:checkcode}" onclick="this.src='{pboot:checkcode}?'+Math.round(Math.random()*10);" />
+                        </div>
+                    </div>
+                </div>
+                {/pboot:if}
+                
+                <div class="form-group">
+                   <button type="submit" class="btn btn-info mb-2">提交订单</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3"></div>
+    </div> 
+
+</div>
+
+
+<script>
+
+//ajax提交订单
+function submsg(obj){
+  var url='{pboot:form fcode=3}';
+  var name=$(obj).find("#name").val();
+  var contact=$(obj).find("#contact").val();
+  var project=$(obj).find("#project").val();
+  var requirement=$(obj).find("#requirement").val();
+  var plasmid=$(obj).find("#plasmid").val();
+  var seq=$(obj).find("#seq").val();
+  var resis1=$(obj).find("#resis1").val();
+  var resis2=$(obj).find("#resis2").val();
+  var target=$(obj).find("#target").val();
+  var request=$(obj).find("#request").val();
+  var species=$(obj).find("#species").val();
+  var lab=$(obj).find("#lab").val();
+  var org=$(obj).find("#org").val();
+  var other=$(obj).find("#other").val();
+  var checkcode=$(obj).find("#checkcode").val();
+  
+  $.ajax({
+    type: 'POST',
+    url: url,
+    dataType: 'json',
+    data: {
+    	name: name,
+    	contact: contact,
+      project: project,
+	  requirement: requirement,
+      plasmid: plasmid,
+	  seq: seq,
+      resis1: resis1,
+      resis2: resis2,
+      request: request,
+      target: target,
+      species: species,
+      lab: lab,
+      org: org,
+    	other: other,
+    	checkcode: checkcode
+    },
+    success: function (response, status) {
+      if(response.code){
+		 alert("谢谢订购，我们会立刻开始项目！");
+		 $(obj)[0].reset(); 
+      }else{
+    	 alert(response.data);
+      }
+    },
+    error:function(xhr,status,error){
+      alert('返回数据异常！');
+    }
+  });
+  return false;
+}
+</script>
+
+ 
+{include file=comm/foot.html}
