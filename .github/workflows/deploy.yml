@@ -15,8 +15,8 @@ jobs:
 
       - name: Package static files
         run: |
-          # 排除 git 目录和 actions 目录，将根目录下的静态网站文件打包
-          tar -czf deploy.tar.gz --exclude='.git' --exclude='.github' --exclude='deploy.tar.gz' .
+          # 输出到 /tmp 目录，避免修改当前目录导致 tar 报错退出码 1
+          tar -czf /tmp/deploy.tar.gz --exclude='.git' --exclude='.github' .
 
       - name: Upload to vxServer
         env:
@@ -26,5 +26,5 @@ jobs:
             https://mesh.vx.link/openapi/v3/vxserver \
             -H "X-Deploy-Key: $VXSERVER_DEPLOY_KEY" \
             -F "action=static_deploy" \
-            -F "file=@deploy.tar.gz" \
+            -F "file=@/tmp/deploy.tar.gz" \
             -F "note=build-${{ github.sha }}"
