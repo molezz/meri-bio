@@ -1,0 +1,30 @@
+name: Deploy static files to vxServer
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # 支持在 GitHub 页面上手动点击运行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Package static files
+        run: |
+          # 排除 git 目录和 actions 目录，将根目录下的静态网站文件打包
+          tar -czf deploy.tar.gz --exclude='.git' --exclude='.github' --exclude='deploy.tar.gz' .
+
+      - name: Upload to vxServer
+        env:
+          VXSERVER_DEPLOY_KEY: ${{ secrets.VXSERVER_DEPLOY_KEY }}
+        run: |
+          curl --fail-with-body -X POST \
+            https://mesh.vx.link/openapi/v3/vxserver \
+            -H "X-Deploy-Key: $VXSERVER_DEPLOY_KEY" \
+            -F "action=static_deploy" \
+            -F "file=@deploy.tar.gz" \
+            -F "note=build-${{ github.sha }}"
